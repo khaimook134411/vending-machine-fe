@@ -73,4 +73,16 @@ export class Client {
       return e;
     }
   }
+
+  async completeOrder(args: { id: string; receive: Money }): Promise<unknown> {
+    try {
+      const response = await client.post("/order/complete", {
+        id: args.id,
+        receive: args.receive,
+      });
+      return response.data;
+    } catch (e) {
+      return e;
+    }
+  }
 }

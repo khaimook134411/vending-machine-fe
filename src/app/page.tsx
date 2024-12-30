@@ -58,15 +58,19 @@ export default function Home() {
       <div className="flex gap-4">
         <Badge
           text="All"
-          state={selectedCategories.length === 0 ? "active" : "standard"}
+          config={
+            selectedCategories.length === 0 ? "fill-primary" : "outline-primary"
+          }
           onClick={() => setSelectedCategories([])} // Deselect all categories
         />
         {categories.map((category) => (
           <Badge
             key={category.id}
             text={category.title}
-            state={
-              selectedCategories.includes(category.id) ? "active" : "standard"
+            config={
+              selectedCategories.includes(category.id)
+                ? "fill-primary"
+                : "outline-primary"
             }
             onClick={() => onCategoryClick(category.id)}
           />

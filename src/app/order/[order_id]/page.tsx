@@ -1,8 +1,10 @@
 "use client";
 
+import Badge from "@/components/badge";
+import Button from "@/components/button";
 import MoneyCard from "@/components/money_card";
 import { Order } from "@/data/model/order";
-import { Money } from "@/data/model/product";
+import { Money, Product } from "@/data/model/product";
 import { Client } from "@/data/sources/client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -60,6 +62,7 @@ export default function Order() {
     : params.order_id;
 
   const [order, setOrder] = useState<Order | undefined>(undefined);
+  const [product, setProduct] = useState<Product | undefined>(undefined);
   const [balance, setBalance] = useState<Money>({
     coin_1: 0,
     coin_5: 0,
@@ -86,8 +89,16 @@ export default function Order() {
       setOrder(fetchedOrder as Order);
     };
 
+    const fetchProduct = async () => {
+      if (order?.product_id) {
+        const fetchedProduct = await client.getProductById(order?.product_id);
+        setProduct(fetchedProduct as Product);
+      }
+    };
+
     fetchOrder();
-  }, [orderNumber]);
+    fetchProduct();
+  }, [orderNumber, order?.product_id]);
 
   const increaseAmount = (id: keyof Money) => {
     setBalance((prev) => ({
@@ -114,40 +125,102 @@ export default function Order() {
     router.push("/");
   };
 
+  const payOrder = async () => {
+    if (!orderNumber) return;
+
+    await client.completeOrder({
+      id: orderNumber,
+      receive: balance,
+    });
+
+    router.push("/");
+  };
+
   return (
-    <div>
-      <p>Order number: {orderNumber}</p>
-      <p>Status: {order?.status}</p>
-      <p>total: {order?.total}</p>
-      <p>quantity: {order?.quantity}</p>
-      <p>Pay</p>
-      <p>Your Balance: {totalBalance} Baht</p>
-      <div className="p-4 grid grid-cols-4 gap-4">
-        {money.map((coin) => (
-          <MoneyCard
-            key={coin.id}
-            title={coin.title}
-            image={coin.image}
-            amount={balance[coin.id as keyof Money]}
-            onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
-            onClickPlus={() => increaseAmount(coin.id as keyof Money)}
-          />
-        ))}
-      </div>
-      <div className="flex gap-4">
-        <button
-          className="w-fit border-4 bg-[#e5e5e5] py-2 px-4 rounded"
-          onClick={cancleOrder}
-        >
-          Cancel
-        </button>
-        <button
-          className="w-fit border-4 bg-[#e5e5e5] py-2 px-4 rounded"
-          onClick={() => {}}
-        >
-          Comfirm
-        </button>
+    <div className="bg-white w-full h-full flex flex-col gap-4">
+      <div className="grid grid-cols-2">
+        <img
+          src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
+          alt=""
+          className={`${
+            product?.image_uri
+              ? "w-full h-full object-cover object-center"
+              : "p-4"
+          } `}
+        />
+        <div className="p-4 flex flex-col gap-4 justify-between">
+          <div className="flex gap-4">
+            <div className="p-4 flex flex-col gap-4">
+              {money.map((coin) => (
+                <MoneyCard
+                  key={coin.id}
+                  title={coin.title}
+                  image={coin.image}
+                  amount={balance[coin.id as keyof Money]}
+                  onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
+                  onClickPlus={() => increaseAmount(coin.id as keyof Money)}
+                />
+              ))}
+            </div>
+            <div className="flex flex-col gap-4 h-fit border p-4 rouneded-lg">
+              <p>Your Balance: {totalBalance} Baht</p>
+              <div className="flex gap-4 ">
+                <Button
+                  text="Cancel"
+                  width="w-full"
+                  config="fill-critical"
+                  onClick={cancleOrder}
+                />
+                <Button text="Pay" width="w-full" onClick={payOrder} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
+// <div className="p-4">
+//     <div className="flex gap-4">
+//       <img
+//         src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
+//         alt=""
+//         className={`${
+//           product?.image_uri ? "w-40 h-40 object-cover object-center" : "p-4"
+//         } `}
+//       />
+
+//       <div>
+//         <p>Order number: {orderNumber}</p>
+//         <p>{product?.title}</p>
+//         <Badge text={order?.status ?? ""} config="fill-secondary" />
+//         <p>Status: {order?.status}</p>
+//         <p>total: {order?.total}</p>
+//         <p>quantity: {order?.quantity}</p>
+//       </div>
+//     </div>
+//     <p>Pay</p>
+//     <p>Your Balance: {totalBalance} Baht</p>
+//     <div className="p-4 grid grid-cols-4 gap-4">
+//       {money.map((coin) => (
+//         <MoneyCard
+//           key={coin.id}
+//           title={coin.title}
+//           image={coin.image}
+//           amount={balance[coin.id as keyof Money]}
+//           onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
+//           onClickPlus={() => increaseAmount(coin.id as keyof Money)}
+//         />
+//       ))}
+//     </div>
+//     <div className="flex gap-4">
+//       <Button
+//         text="Cancel"
+//         width="w-full"
+//         config="fill-critical"
+//         onClick={cancleOrder}
+//       />
+//       <Button text="Pay" width="w-full" onClick={payOrder} />
+//     </div>
+//   </div>

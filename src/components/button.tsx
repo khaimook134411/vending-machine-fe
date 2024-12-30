@@ -1,23 +1,29 @@
 import classNames from "classnames";
 
-interface BadgeProps {
+export interface ButtonProps {
   text: string;
+  state?: "standard" | "disabled";
   config?:
     | "fill-primary"
     | "fill-secondary"
     | "fill-critical"
-    | "fill-success"
     | "outline-primary"
     | "outline-secondary";
+  width?: string;
+  rounded?: string;
   onClick?: () => void;
 }
 
-export default function Badge({
+export default function Button({
   text,
+  state = "standard",
   config = "fill-primary",
-  onClick = () => {},
-}: BadgeProps) {
-  const buttonClasses = classNames("py-1 px-4 rounded-full", {
+  width = "w-fit",
+  rounded = "rounded-lg",
+  onClick,
+}: ButtonProps) {
+  const buttonClasses = classNames("py-2 px-4", width, rounded, {
+    "cursor-not-allowed opacity-50": state === "disabled",
     "bg-primary text-white": config === "fill-primary",
     "bg-secondary text-black": config === "fill-secondary",
     "bg-red-500 text-white": config === "fill-critical",
@@ -28,8 +34,12 @@ export default function Badge({
   });
 
   return (
-    <button className={buttonClasses} onClick={onClick}>
-      <p className="text-sm font-semibold">{text}</p>
+    <button
+      className={buttonClasses}
+      onClick={state === "disabled" ? undefined : onClick}
+      disabled={state === "disabled"}
+    >
+      {text}
     </button>
   );
 }

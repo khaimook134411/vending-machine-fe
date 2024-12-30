@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/button";
 import { Product } from "@/data/model/product";
 import { Client } from "@/data/sources/client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -47,14 +48,16 @@ export default function Order() {
   return (
     <div className="bg-white w-full h-full flex flex-col gap-4">
       <div className="grid grid-cols-2">
-        <button
-          className="fixed top-4 left-4 w-fit border-4 bg-[#e5e5e5] py-2 px-4 rounded-full"
-          onClick={() => {
-            router.push("/");
-          }}
-        >
-          Back to Menu
-        </button>
+        <div className="fixed top-4 left-4">
+          <Button
+            text="Back to Menu"
+            config="outline-secondary"
+            rounded="rounded-full"
+            onClick={() => {
+              router.push("/");
+            }}
+          />
+        </div>
         <img
           src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
           alt=""
@@ -67,19 +70,19 @@ export default function Order() {
         <div className="p-4 flex flex-col gap-4 justify-between">
           <div className="flex flex-col gap-4">
             <div className="flex gap-7 items-center">
-              <button
-                className="w-full h-10 bg-[#e5e5e5] p-2 rounded"
+              <Button
+                text="-"
+                width="w-full"
+                config="fill-secondary"
                 onClick={decreaseAmount}
-              >
-                -
-              </button>
+              />
               <p className="font-black">{amount}</p>
-              <button
-                className="w-full h-10 bg-[#e5e5e5] p-2 rounded"
+              <Button
+                text="+"
+                width="w-full"
+                config="fill-secondary"
                 onClick={increaseAmount}
-              >
-                +
-              </button>
+              />
             </div>
             <p className="text-xl font-bold">{product?.title}</p>
             <p>{product?.description}</p>
@@ -87,12 +90,12 @@ export default function Order() {
             <p></p>
           </div>
 
-          <button
-            className="w-full h-20 bg-[#e5e5e5] p-2 rounded"
+          <Button
+            text="Checkout"
+            width="w-full"
+            config="fill-primary"
             onClick={onClickCheckout}
-          >
-            Checkout
-          </button>
+          ></Button>
         </div>
       </div>
     </div>
