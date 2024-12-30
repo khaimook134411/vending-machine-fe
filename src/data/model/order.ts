@@ -2,6 +2,6 @@ export interface Order {
   id: string;
   status: string;
   total: number;
-  productId: string;
+  product_id: string;
   quantity: number;
 }

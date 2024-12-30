@@ -24,7 +24,7 @@ export default function ItemCard({
       <img
         src={imgUri ? imgUri : "/placeholder.png"}
         alt=""
-        className="w-48 h-48 object-cover object-right-bottom hover:scale-105 transition-transform"
+        className="w-48 h-48 object-cover object-center hover:scale-105 transition-transform"
       />
 
       <div className="w-full flex justify-between">
