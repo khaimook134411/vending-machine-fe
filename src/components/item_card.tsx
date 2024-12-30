@@ -3,6 +3,8 @@ interface ItemCardProps {
   description?: string;
   price: number;
   imgUri?: string;
+  state?: "standard" | "disabled";
+  onClick?: () => void;
 }
 
 export default function ItemCard({
@@ -10,28 +12,38 @@ export default function ItemCard({
   description,
   price,
   imgUri,
+  state = "standard",
+  onClick,
 }: ItemCardProps) {
   return (
-    <div className="rounded-2xl p-4 px-4 bg-primary flex flex-col items-center justify-center overflow-hidden">
-      {/* <div
-        className="w-48 h-48  transition-transform "
-        style={{
-          backgroundImage: imgUri
-            ? `url(${imgUri})`
-            : `url("/placeholder.png")`,
-        }}
-      ></div> */}
-      <img
-        src={imgUri ? imgUri : "/placeholder.png"}
-        alt=""
-        className="w-48 h-48 object-cover object-center hover:scale-105 transition-transform"
-      />
-
-      <div className="w-full flex justify-between">
-        <p className="text-lg font-semibold py-1">{title}</p>
-        <p className="py-1 text-xl font-medium">{price} Baht</p>
+    <div
+      className={`flex flex-col w-[20rem] relative max-w-[50%] items-center justify-start px-2.5 pb-5 gap-1 ${
+        state === "disabled" ? "opacity-50" : "cursor-pointer"
+      }`}
+      onClick={onClick}
+    >
+      <div className="w-full h-50 flex justify-center items-center overflow-hidden rounded-lg">
+        <img
+          src={imgUri ? imgUri : "/placeholder.png"}
+          alt=""
+          className={`w-full h-full object-cover object-center aspect-square ${
+            imgUri && state === "standard"
+              ? "hover:scale-105 transition-transform"
+              : ""
+          } `}
+        />
       </div>
-      <p className="w-full text-xs">{description}</p>
+
+      <div className="w-full flex flex-col gap-1">
+        <p className="py-1 text-base font-semibold truncate flex-1">{title}</p>
+        <div className="w-full flex justify-between items-center border-r border-[#bcbcbc]">
+          <p className="px-1 text-xs font-bold text-[#222]">Price</p>
+          <p className="px-1 text-xs text-[#666]">{price} Baht</p>
+        </div>
+        <div className="h-[4.25rem] overflow-hidden">
+          <p className="py-1 text-sm line-clamp-2">{description}</p>
+        </div>
+      </div>
     </div>
   );
 }
