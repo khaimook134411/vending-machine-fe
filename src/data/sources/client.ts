@@ -37,9 +37,15 @@ export class Client {
     }
   }
 
-  async createOrder(): Promise<any> {
+  async createOrder(args: {
+    product_id: string;
+    quantity: number;
+  }): Promise<{ id: string } | unknown> {
     try {
-      const response = await client.post("/order/create");
+      const response = await client.post("/order/create", {
+        product_id: args.product_id,
+        quantity: args.quantity,
+      });
       return response.data;
     } catch (e) {
       return e;
