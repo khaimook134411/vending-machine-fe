@@ -43,6 +43,7 @@ export default function Order() {
 
     fetchData();
   }, []);
+
   return (
     <div className="bg-white w-full h-full flex flex-col gap-4">
       <div className="grid grid-cols-2">
@@ -83,6 +84,7 @@ export default function Order() {
             <p className="text-xl font-bold">{product?.title}</p>
             <p>{product?.description}</p>
             <p>available stock : {product?.quantity}</p>
+            <p></p>
           </div>
 
           <button
