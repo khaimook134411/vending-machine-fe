@@ -157,7 +157,7 @@ export default function Order() {
   return (
     <>
       {" "}
-      <div className="bg-[#e7e7e8] p-4 w-full h-screen flex flex-col gap-4">
+      <div className="bg-[#e7e7e8] p-4 w-full h-screen flex flex-col">
         <div className="flex gap-2 items-center">
           <p className="text-secondary font-semibold">
             Order number: #{orderNumber}
@@ -166,7 +166,7 @@ export default function Order() {
             <Badge text={order?.status ?? ""} config="fill-primary" />
           </div>
         </div>
-        <p className="font-semibold">Payment Method: Cash</p>
+        <p className="pt-2 pb-1 text-sm font-semibold">Payment Method: Cash</p>
         <div className="tablet:grid tablet:grid-cols-2 tablet:gap-2">
           <div className="pb-2 flex flex-col gap-2">
             {money.slice(0, 4).map((coin) => (
@@ -211,7 +211,12 @@ export default function Order() {
             config="outline-secondary"
             onClick={cancleOrder}
           />
-          <Button text="Place Order" width="w-full" onClick={payOrder} />
+          <Button
+            text="Place Order"
+            width="w-full"
+            onClick={payOrder}
+            state={totalBalance < (order?.total ?? 0) ? "disabled" : "standard"}
+          />
         </div>
       </div>
     </>

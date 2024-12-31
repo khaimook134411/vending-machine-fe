@@ -12,10 +12,22 @@ export default function InputStepper({
   decreaseAmount,
 }: InputStepperProps) {
   return (
-    <div className="flex gap-4 items-center">
-      <Button text="-" config="outline-secondary" onClick={decreaseAmount} />
-      <p className="text-lg text-secondary font-semibold">{amount}</p>
-      <Button text="+" config="outline-secondary" onClick={increaseAmount} />
+    <div className="flex items-center border border-secondary rounded">
+      <Button
+        text="-"
+        size="s"
+        config="plain-secondary"
+        onClick={decreaseAmount}
+      />
+      <div className="border-x border-secondary w-7 h-7 flex items-center justify-center">
+        <p className="text-center">{amount}</p>
+      </div>
+      <Button
+        text="+"
+        size="s"
+        config="plain-secondary"
+        onClick={increaseAmount}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ export interface ButtonProps {
     | "plain-primary"
     | "plain-secondary";
   width?: string;
+  size?: "s" | "m";
   rounded?: string;
   onClick?: () => void;
 }
@@ -22,9 +23,10 @@ export default function Button({
   config = "fill-primary",
   width = "w-fit",
   rounded = "rounded-lg",
+  size = "m",
   onClick,
 }: ButtonProps) {
-  const buttonClasses = classNames("py-2 px-4", width, rounded, {
+  const buttonClasses = classNames(width, rounded, {
     "cursor-not-allowed opacity-50": state === "disabled",
     "bg-primary text-white": config === "fill-primary",
     "bg-secondary text-black": config === "fill-secondary",
@@ -35,6 +37,8 @@ export default function Button({
       config === "outline-secondary",
     "text-primary bg-transparent": config === "plain-primary",
     "text-secondary bg-transparent": config === "plain-secondary",
+    "h-7 px-2": size === "s",
+    "h-12 px-4": size === "m",
   });
 
   return (

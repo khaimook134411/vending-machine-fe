@@ -19,7 +19,7 @@ export default function MoneyCard({
   return (
     <div className="bg-white w-full p-4 rounded-lg ">
       <div className="flex gap-4 justify-between items-center">
-        <img src={image} alt="" className="h-10" />
+        <img src={image} alt="" className="h-12 tablet:h-24" />
         <div className="flex items-center gap-6">
           <p className="text-xs text-secondary">{title}</p>
           <InputStepper
