@@ -4,10 +4,11 @@ import Badge from "@/components/badge";
 import Button from "@/components/button";
 import MoneyCard from "@/components/money_card";
 import { Order } from "@/data/model/order";
-import { Money, Product } from "@/data/model/product";
+import { Money } from "@/data/model/product";
 import { Client } from "@/data/sources/client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import Swal from "sweetalert2";
 
 const money = [
   {
@@ -62,7 +63,6 @@ export default function Order() {
     : params.order_id;
 
   const [order, setOrder] = useState<Order | undefined>(undefined);
-  const [product, setProduct] = useState<Product | undefined>(undefined);
   const [balance, setBalance] = useState<Money>({
     coin_1: 0,
     coin_5: 0,
@@ -89,15 +89,7 @@ export default function Order() {
       setOrder(fetchedOrder as Order);
     };
 
-    const fetchProduct = async () => {
-      if (order?.product_id) {
-        const fetchedProduct = await client.getProductById(order?.product_id);
-        setProduct(fetchedProduct as Product);
-      }
-    };
-
     fetchOrder();
-    fetchProduct();
   }, [orderNumber, order?.product_id]);
 
   const increaseAmount = (id: keyof Money) => {
@@ -122,7 +114,26 @@ export default function Order() {
       refund: balance,
     });
 
-    router.push("/");
+    Swal.fire({
+      title: "Are you sure to cancel order?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#8c8989",
+      confirmButtonText: "Cancel Order",
+      cancelButtonText: "Keep Order",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Cancelled!",
+          text: "Your order has been cancelled.",
+          icon: "success",
+        }).then(() => {
+          router.push("/");
+        });
+      }
+    });
   };
 
   const payOrder = async () => {
@@ -133,7 +144,14 @@ export default function Order() {
       receive: balance,
     });
 
-    router.push("/");
+    Swal.fire({
+      icon: "success",
+      title: "Your order has been completed",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      router.push("/");
+    });
   };
 
   return (
@@ -199,47 +217,3 @@ export default function Order() {
     </>
   );
 }
-
-// <div className="p-4">
-//     <div className="flex gap-4">
-//       <img
-//         src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
-//         alt=""
-//         className={`${
-//           product?.image_uri ? "w-40 h-40 object-cover object-center" : "p-4"
-//         } `}
-//       />
-
-//       <div>
-//         <p>Order number: {orderNumber}</p>
-//         <p>{product?.title}</p>
-//         <Badge text={order?.status ?? ""} config="fill-secondary" />
-//         <p>Status: {order?.status}</p>
-//         <p>total: {order?.total}</p>
-//         <p>quantity: {order?.quantity}</p>
-//       </div>
-//     </div>
-//     <p>Pay</p>
-//     <p>Your Balance: {totalBalance} Baht</p>
-//     <div className="p-4 grid grid-cols-4 gap-4">
-//       {money.map((coin) => (
-//         <MoneyCard
-//           key={coin.id}
-//           title={coin.title}
-//           image={coin.image}
-//           amount={balance[coin.id as keyof Money]}
-//           onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
-//           onClickPlus={() => increaseAmount(coin.id as keyof Money)}
-//         />
-//       ))}
-//     </div>
-//     <div className="flex gap-4">
-//       <Button
-//         text="Cancel"
-//         width="w-full"
-//         config="fill-critical"
-//         onClick={cancleOrder}
-//       />
-//       <Button text="Pay" width="w-full" onClick={payOrder} />
-//     </div>
-//   </div>
