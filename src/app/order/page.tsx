@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/button";
+import InputStepper from "@/components/input_stepper";
 import { Product } from "@/data/model/product";
 import { Client } from "@/data/sources/client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -46,57 +47,67 @@ export default function Order() {
   }, []);
 
   return (
-    <div className="bg-white w-full h-full flex flex-col gap-4">
-      <div className="grid grid-cols-2">
-        <div className="fixed top-4 left-4">
-          <Button
-            text="Back to Menu"
-            config="outline-secondary"
-            rounded="rounded-full"
-            onClick={() => {
-              router.push("/");
-            }}
-          />
-        </div>
-        <img
-          src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
-          alt=""
-          className={`${
-            product?.image_uri
-              ? "w-full h-full object-cover object-center"
-              : "p-4"
-          } `}
+    <div className="bg-[#e7e7e8] w-full h-screen flex flex-col justify-between">
+      <div className="p-4 flex flex-col gap-4">
+        <Button
+          text="< Back to Menu"
+          config="plain-primary"
+          onClick={() => {
+            router.push("/");
+          }}
         />
-        <div className="p-4 flex flex-col gap-4 justify-between">
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-7 items-center">
-              <Button
-                text="-"
-                width="w-full"
-                config="fill-secondary"
-                onClick={decreaseAmount}
+        <div className="p-4 flex flex-col gap-4 bg-white rounded-lg">
+          <div className="flex flex-col tablet:flex-row gap-6 items-center justify-between">
+            <div className="w-full flex gap-6">
+              <img
+                src={
+                  product?.image_uri ? product?.image_uri : "/placeholder.png"
+                }
+                alt=""
+                className={`${
+                  product?.image_uri
+                    ? "w-40 h-40 object-cover object-center rounded-lg"
+                    : "p-4"
+                } `}
               />
-              <p className="font-black">{amount}</p>
-              <Button
-                text="+"
-                width="w-full"
-                config="fill-secondary"
-                onClick={increaseAmount}
+              <div>
+                <p className="py-1 text-xl font-bold">{product?.title}</p>
+                <p className="text-secondary text-sm">
+                  available stock : {product?.quantity}
+                </p>
+              </div>
+            </div>
+            <div className="w-full flex justify-between items-center">
+              <p className="text-lg text-primary font-semibold tablet:pl-4 shrink-0">
+                ฿{product?.price}
+              </p>
+              <InputStepper
+                amount={amount}
+                increaseAmount={increaseAmount}
+                decreaseAmount={decreaseAmount}
               />
             </div>
-            <p className="text-xl font-bold">{product?.title}</p>
-            <p>{product?.description}</p>
-            <p>available stock : {product?.quantity}</p>
-            <p></p>
           </div>
-
-          <Button
-            text="Checkout"
-            width="w-full"
-            config="fill-primary"
-            onClick={onClickCheckout}
-          ></Button>
+          <div>
+            <p className="py-1 text-sm font-semibold">description</p>
+            <p>{product?.description}</p>
+          </div>
         </div>
+      </div>
+
+      <div className="bg-white w-full p-4 flex flex-col tablet:flex-row gap-4 tablet:items-center tablet:justify-end shadow-inner">
+        <p>
+          Total ({amount} {amount > 1 ? "items" : "item"}) :{" "}
+          <span className="text-lg text-primary font-semibold">
+            ฿{amount * (product?.price ?? 0)}
+          </span>
+        </p>
+        <Button
+          text="Checkout"
+          config="fill-primary"
+          width="w-full tablet:w-auto"
+          onClick={onClickCheckout}
+        />
       </div>
     </div>
   );

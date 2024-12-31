@@ -1,4 +1,5 @@
 import Button from "./button";
+import InputStepper from "./input_stepper";
 
 export interface MoneyCardProps {
   title: string;
@@ -16,16 +17,16 @@ export default function MoneyCard({
   onClickPlus,
 }: MoneyCardProps) {
   return (
-    <div className="w-full bg-white p-4 rounded-lg ">
-      <p className="text-xs">{title}</p>
+    <div className="bg-white w-full p-4 rounded-lg ">
       <div className="flex gap-4 justify-between items-center">
-        <div className="w-full flex flex-col items-center justify-center">
-          <img src={image} alt="" className="h-10" />
-        </div>
-        <div className="flex gap-1 items-center">
-          <Button text="-" config="fill-secondary" onClick={onClickMinus} />
-          <p className="font-black w-7 text-center">{amount}</p>
-          <Button text="+" config="fill-secondary" onClick={onClickPlus} />
+        <img src={image} alt="" className="h-10" />
+        <div className="flex items-center gap-6">
+          <p className="text-xs text-secondary">{title}</p>
+          <InputStepper
+            amount={amount}
+            decreaseAmount={onClickMinus}
+            increaseAmount={onClickPlus}
+          />
         </div>
       </div>
     </div>

@@ -8,7 +8,9 @@ export interface ButtonProps {
     | "fill-secondary"
     | "fill-critical"
     | "outline-primary"
-    | "outline-secondary";
+    | "outline-secondary"
+    | "plain-primary"
+    | "plain-secondary";
   width?: string;
   rounded?: string;
   onClick?: () => void;
@@ -31,6 +33,8 @@ export default function Button({
       config === "outline-primary",
     "border border-secondary text-secondary bg-transparent":
       config === "outline-secondary",
+    "text-primary bg-transparent": config === "plain-primary",
+    "text-secondary bg-transparent": config === "plain-secondary",
   });
 
   return (
@@ -39,7 +43,7 @@ export default function Button({
       onClick={state === "disabled" ? undefined : onClick}
       disabled={state === "disabled"}
     >
-      {text}
+      <p className="text-md font-semibold">{text}</p>
     </button>
   );
 }

@@ -12,42 +12,42 @@ import { useEffect, useMemo, useState } from "react";
 const money = [
   {
     id: "coin_1",
-    title: "1 Baht",
+    value: "1",
     image: "/coin_1.jpg",
   },
   {
     id: "coin_5",
-    title: "5 Baht",
+    value: "5",
     image: "/coin_5.jpg",
   },
   {
     id: "coin_10",
-    title: "10 Baht",
+    value: "10",
     image: "/coin_10.jpg",
   },
   {
     id: "bank_20",
-    title: "20 Baht",
+    value: "20",
     image: "/bank_20.jpg",
   },
   {
     id: "bank_50",
-    title: "50 Baht",
+    value: "50",
     image: "/bank_50.jpg",
   },
   {
     id: "bank_100",
-    title: "100 Baht",
+    value: "100",
     image: "/bank_100.jpg",
   },
   {
     id: "bank_500",
-    title: "500 Baht",
+    value: "500",
     image: "/bank_500.jpg",
   },
   {
     id: "bank_1000",
-    title: "1000 Baht",
+    value: "1000",
     image: "/bank_1000.jpg",
   },
 ];
@@ -137,47 +137,66 @@ export default function Order() {
   };
 
   return (
-    <div className="bg-white w-full h-full flex flex-col gap-4">
-      <div className="grid grid-cols-2">
-        <img
-          src={product?.image_uri ? product?.image_uri : "/placeholder.png"}
-          alt=""
-          className={`${
-            product?.image_uri
-              ? "w-full h-full object-cover object-center"
-              : "p-4"
-          } `}
-        />
-        <div className="p-4 flex flex-col gap-4 justify-between">
-          <div className="flex gap-4">
-            <div className="p-4 flex flex-col gap-4">
-              {money.map((coin) => (
-                <MoneyCard
-                  key={coin.id}
-                  title={coin.title}
-                  image={coin.image}
-                  amount={balance[coin.id as keyof Money]}
-                  onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
-                  onClickPlus={() => increaseAmount(coin.id as keyof Money)}
-                />
-              ))}
-            </div>
-            <div className="flex flex-col gap-4 h-fit border p-4 rouneded-lg">
-              <p>Your Balance: {totalBalance} Baht</p>
-              <div className="flex gap-4 ">
-                <Button
-                  text="Cancel"
-                  width="w-full"
-                  config="fill-critical"
-                  onClick={cancleOrder}
-                />
-                <Button text="Pay" width="w-full" onClick={payOrder} />
-              </div>
-            </div>
+    <>
+      {" "}
+      <div className="bg-[#e7e7e8] p-4 w-full h-screen flex flex-col gap-4">
+        <div className="flex gap-2 items-center">
+          <p className="text-secondary font-semibold">
+            Order number: #{orderNumber}
+          </p>
+          <div>
+            <Badge text={order?.status ?? ""} config="fill-primary" />
+          </div>
+        </div>
+        <p className="font-semibold">Payment Method: Cash</p>
+        <div className="tablet:grid tablet:grid-cols-2 tablet:gap-2">
+          <div className="pb-2 flex flex-col gap-2">
+            {money.slice(0, 4).map((coin) => (
+              <MoneyCard
+                key={coin.id}
+                title={`฿${coin.value}`}
+                image={coin.image}
+                amount={balance[coin.id as keyof Money]}
+                onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
+                onClickPlus={() => increaseAmount(coin.id as keyof Money)}
+              />
+            ))}
+          </div>
+          <div className="pb-2 flex flex-col gap-2">
+            {money.slice(4).map((coin) => (
+              <MoneyCard
+                key={coin.id}
+                title={`฿${coin.value}`}
+                image={coin.image}
+                amount={balance[coin.id as keyof Money]}
+                onClickMinus={() => decreaseAmount(coin.id as keyof Money)}
+                onClickPlus={() => increaseAmount(coin.id as keyof Money)}
+              />
+            ))}
           </div>
         </div>
       </div>
-    </div>
+      <div className="fixed bg-white shadow-md bottom-0 w-full flex flex-col gap-4 h-fit border p-4 rouneded-lg">
+        <div className="flex justify-between">
+          <p>
+            Total :{" "}
+            <span className="text-lg text-primary font-semibold">
+              ฿{order?.total}
+            </span>
+          </p>
+          <p>Balance: ฿{totalBalance}</p>
+        </div>
+        <div className="flex gap-4 ">
+          <Button
+            text="Cancel Order"
+            width="w-full"
+            config="outline-secondary"
+            onClick={cancleOrder}
+          />
+          <Button text="Place Order" width="w-full" onClick={payOrder} />
+        </div>
+      </div>
+    </>
   );
 }
 

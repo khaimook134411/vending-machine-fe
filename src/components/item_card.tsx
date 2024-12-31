@@ -20,7 +20,7 @@ export default function ItemCard({
       className={`flex flex-col w-[20rem] relative max-w-[50%] items-center justify-start px-2.5 pb-5 gap-1 ${
         state === "disabled" ? "opacity-50" : "cursor-pointer"
       }`}
-      onClick={onClick}
+      onClick={state === "disabled" ? undefined : onClick}
     >
       <div className="w-full h-50 flex justify-center items-center overflow-hidden rounded-lg">
         <img
