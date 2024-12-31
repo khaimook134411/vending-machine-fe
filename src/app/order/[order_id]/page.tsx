@@ -145,12 +145,15 @@ export default function Order() {
     });
 
     Swal.fire({
-      icon: "success",
       title: "Your order has been completed",
-      showConfirmButton: false,
-      timer: 1500,
-    }).then(() => {
-      router.push("/");
+      text: "Please collect your change.",
+      icon: "success",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "I have received my change",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push("/");
+      }
     });
   };
 
